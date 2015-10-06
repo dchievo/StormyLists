@@ -181,7 +181,22 @@ public class MainActivity extends ActionBarActivity {
         JSONObject hourly = forecast.getJSONObject("hourly");
         JSONArray data = hourly.getJSONArray("data");
 
-        return Hour[];
+        Hour[] hours = new Hour[data.length()];
+
+        for (int i = 0; i < data.length(); i++)
+        {
+            JSONObject jsonHour = data.getJSONObject(i);
+            Hour hour = new Hour();
+
+            hour.setSummary(jsonHour.getString("summary"));
+            hour.setTemperature(jsonHour.getDouble("temperature"));
+            hour.setIcon(jsonHour.getString("icon"));
+            hour.setTime(jsonHour.getLong("time"));
+            hour.setTimezone("timezone");
+
+            hours[i] = hour;
+        }
+        return hours;
     }
 
 

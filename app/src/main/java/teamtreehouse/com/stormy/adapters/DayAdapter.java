@@ -29,7 +29,7 @@ public class DayAdapter extends BaseAdapter
     public int getCount() {
         return mDays.length;
     }
-321321
+
     @Override
     public Object getItem(int position) {
         return mDays[position];
@@ -55,6 +55,13 @@ public class DayAdapter extends BaseAdapter
             convertView.setTag(holder);
 
         }
+        else
+        {
+            holder = (ViewHolder) convertView.getTag();
+        }
+
+        Day day = new Day();
+        day.
         return null;
     }
 

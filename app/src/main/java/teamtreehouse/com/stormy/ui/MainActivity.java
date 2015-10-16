@@ -1,6 +1,7 @@
 package teamtreehouse.com.stormy.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -27,6 +28,7 @@ import java.io.IOException;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import teamtreehouse.com.stormy.R;
 import teamtreehouse.com.stormy.weather.Current;
 import teamtreehouse.com.stormy.weather.Day;
@@ -37,7 +39,7 @@ import teamtreehouse.com.stormy.weather.Hour;
 public class MainActivity extends ActionBarActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
-
+    public static final String DAILY_FORECAST = "DAILY_FORECAST";
     private Forecast mForecast;
 
     @InjectView(R.id.timeLabel) TextView mTimeLabel;
@@ -175,17 +177,17 @@ public class MainActivity extends ActionBarActivity {
         JSONObject forecast = new JSONObject(jsonData);
         String timezone = forecast.getString("timezone");
         JSONObject daily = forecast.getJSONObject("daily");
-        JSONArray data = new JSONArray("data");
+        JSONArray data = daily.getJSONArray("data");
 
         Day[] days = new Day[data.length()];
 
         for (int i = 0; i < data.length(); i++)
         {
-            Day day = new Day();
             JSONObject jsonDay = data.getJSONObject(i);
+            Day day = new Day();
             day.setIcon(jsonDay.getString("icon"));
             day.setSummary(jsonDay.getString("summary"));
-            day.setTemperatureMax(jsonDay.getDouble("temperature"));
+            day.setTemperatureMax(jsonDay.getDouble("temperatureMax"));
             day.setTime(jsonDay.getLong("time"));
             day.setTimezone(timezone);
             days[i] = day;
@@ -258,6 +260,14 @@ public class MainActivity extends ActionBarActivity {
     private void alertUserAboutError() {
         AlertDialogFragment dialog = new AlertDialogFragment();
         dialog.show(getFragmentManager(), "error_dialog");
+    }
+
+    @OnClick (R.id.dailyButton)
+    public void startDailyActivity(View view)
+    {
+        Intent intent = new Intent(this, DailyForecastActivity.class);
+        intent.putExtra(DAILY_FORECAST, mForecast.getDailyForecast());
+        startActivity(intent);
     }
 }
 
